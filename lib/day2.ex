@@ -45,6 +45,21 @@ defmodule Day2 do
     cubes.red >= pull.red and cubes.green >= pull.green and cubes.blue >= pull.blue
   end
 
+  @spec required_cubes(game()) :: cubes()
+  def required_cubes(game) do
+    red = game.pulls |> Enum.max_by(& &1.red) |> Map.get(:red)
+    green = game.pulls |> Enum.max_by(& &1.green) |> Map.get(:green)
+    blue = game.pulls |> Enum.max_by(& &1.blue) |> Map.get(:blue)
+    %{red: red, green: green, blue: blue}
+  end
+
+  @spec required_cubes_power(list(game())) :: integer()
+  def required_cubes_power(games) do
+    for g <- games, req = required_cubes(g), reduce: 0 do
+      result -> result + req.red * req.green * req.blue
+    end
+  end
+
   @spec possible_id_sum(list(game()), cubes()) :: integer()
   def possible_id_sum(games, cubes) do
     for g <- games, game_possible?(g, cubes), reduce: 0 do
